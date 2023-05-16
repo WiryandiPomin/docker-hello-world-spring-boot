@@ -1,0 +1,37 @@
+version: "3.0"
+
+services:
+  # hello-world:
+  #   build: 
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8080:8080
+  #   labels:
+  #     - com.datadoghq.tags.service="service-w tags"
+  #     - com.datadoghq.tags.env="dev"
+  #     - com.datadoghq.tags.version="0.0.1"
+  #   environment:
+  #     - DD_SERVICE=service-hello-w
+  #     - DD_ENV=dev
+  #     - DD_VERSION=0.0.1
+  #     - DD_AGENT_HOST=agent
+  agent:
+    image: "datadog/agent:7.29.0"
+    environment:
+      - DD_API_KEY=3fbe5ed72b8ccd879fea8bc8d7926f2c
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_PROCESS_AGENT_ENABLED=true
+      - DD_DOCKER_LABELS_AS_TAGS={"my.custom.label.team":"team"}
+      - DD_APM_NON_LOCAL_TRAFFIC=true2
+      - DD_TAGS='env:development'
+    ports:
+      - "8126:8126"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "agent", "service": "agent"}]'
